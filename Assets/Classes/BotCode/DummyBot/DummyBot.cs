@@ -9,6 +9,13 @@ namespace TestingBots
     /// </summary>
     public class DummyBot : BasePlayer
     {
+        /// <summary>
+        /// Called once after bot is spawned. This is for intialising your bot code.
+        /// </summary>
+        protected override void InitPlayer()
+        {
+
+        }
 
         /// <summary>
         /// Called every physics cycle. This is where your bot logic can be written. 
@@ -16,9 +23,7 @@ namespace TestingBots
         /// </summary>
         protected override void UpdatePlayerState()
         {
-            UpdatePlayerMovement();
-            UpdatePlayerRotation();
-            UpdatePlayerShootingState();
+
         }
     }
 }

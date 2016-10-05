@@ -101,7 +101,13 @@ abstract public class BasePlayer : MonoBehaviour {
             throw new UnityException("Player must be tagged as 'Player'");
         }
         gameObject.GetComponentInChildren<Text>().text = gameObject.name;
+        InitPlayer();
     }
+
+    /// <summary>
+    /// Called once after bot is spawned. This is for intialising your bot code.
+    /// </summary>
+    abstract protected void InitPlayer();
 
     /// <summary>
     /// Called every physics cycle. This is the starting point for your bot logic. 
@@ -115,6 +121,9 @@ abstract public class BasePlayer : MonoBehaviour {
     void FixedUpdate()
     {
         UpdatePlayerState();
+        UpdatePlayerMovement();
+        UpdatePlayerRotation();
+        UpdatePlayerShootingState();
     }
 
     /// <summary>
@@ -138,7 +147,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// <summary>
     /// Performs a transform on the current player object to move the player based on the instruction stored in this.movePlayer 
     /// </summary>
-    protected void UpdatePlayerMovement()
+    private void UpdatePlayerMovement()
     {
         // Move player forwards/back/left/right etc
         float diagonalMoveMultiplier = CalculateDiagonalMoveMultiplier(moveVelocity, moveVelocity);
@@ -174,7 +183,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// <summary>
     /// Performs a rotation transform on the current player object based on the rotation instruction in this.rotatePlayer
     /// </summary>
-    protected void UpdatePlayerRotation()
+    private void UpdatePlayerRotation()
     {
         if (rotatePlayer == rotationTypes.Left)
         {
@@ -189,7 +198,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// <summary>
     /// Handles firing of weapons based on instructions from this.shootPrimaryWeapon()
     /// </summary>
-    protected void UpdatePlayerShootingState()
+    private void UpdatePlayerShootingState()
     {
         if (shootPrimaryWeapon && CanShootPrimaryWeapon())
         {
