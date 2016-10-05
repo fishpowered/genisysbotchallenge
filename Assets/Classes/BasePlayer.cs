@@ -130,7 +130,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// Returns how much health the player has. Zero = corpse
     /// </summary>
     /// <returns></returns>
-    public int getHealth()
+    public int GetHealth()
     {
         return health;
     }
@@ -141,7 +141,7 @@ abstract public class BasePlayer : MonoBehaviour {
     protected void UpdatePlayerMovement()
     {
         // Move player forwards/back/left/right etc
-        float diagonalMoveMultiplier = calculateDiagonalMoveMultiplier(moveVelocity, moveVelocity);
+        float diagonalMoveMultiplier = CalculateDiagonalMoveMultiplier(moveVelocity, moveVelocity);
         switch (movePlayer)
         {
             case movementTypes.Forward:
@@ -239,7 +239,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// <param name="x">Displacement in x axis</param>
     /// <param name="z">Displacement in z axis</param>
     /// <returns>float</returns>
-    private float calculateDiagonalMoveMultiplier(float x, float z)
+    private float CalculateDiagonalMoveMultiplier(float x, float z)
     {
         return ((x + z) / 2) / Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2));
     }
@@ -261,7 +261,7 @@ abstract public class BasePlayer : MonoBehaviour {
                     health -= 20;
                     if(health <= 0)
                     {
-                        killPlayer(attackerGameObject);
+                        KillPlayer(attackerGameObject);
                     }
                 }
                 else
@@ -276,7 +276,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// Kill this player
     /// </summary>
     /// <param name="attacker">Player's game object that killed this player</param>
-    private void killPlayer(GameObject attacker)
+    private void KillPlayer(GameObject attacker)
     {
         gameObject.SetActive(false);
         health = 0;
