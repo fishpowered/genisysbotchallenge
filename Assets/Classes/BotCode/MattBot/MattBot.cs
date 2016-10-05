@@ -48,9 +48,6 @@ namespace MattsBotCode
             {
                 timeLeftBeforeChangeOfDirection -= Time.fixedDeltaTime;
             }
-            UpdatePlayerMovement();
-            UpdatePlayerRotation();
-            UpdatePlayerShootingState();
         }
     }
 }

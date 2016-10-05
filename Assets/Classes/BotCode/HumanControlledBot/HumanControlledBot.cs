@@ -25,9 +25,6 @@ namespace TestingBots {
         protected override void UpdatePlayerState()
         {
             CheckPlayerInput();
-            UpdatePlayerMovement();
-            UpdatePlayerRotation();
-            UpdatePlayerShootingState();
         }
 
         /// <summary>

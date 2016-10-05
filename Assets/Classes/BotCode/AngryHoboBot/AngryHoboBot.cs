@@ -47,9 +47,6 @@ namespace TestingBots
             { 
                 timeLeftBeforeChangeOfDirection -= Time.fixedDeltaTime;
             }
-            UpdatePlayerMovement();
-            UpdatePlayerRotation();
-            UpdatePlayerShootingState();
         }
     }
 }
