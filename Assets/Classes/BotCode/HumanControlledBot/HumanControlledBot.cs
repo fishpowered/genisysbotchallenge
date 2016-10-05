@@ -42,9 +42,9 @@ namespace TestingBots {
             bool shootKey = Input.GetKey(KeyCode.Space);
 
             // Check for shooting commands
-            if (shootKey == true)
+            if (shootKey == true && CanShootPrimaryWeapon())
             {
-                ShootPrimaryWeapon();
+                shootPrimaryWeapon = true;
             }
 
             // Check for movement commands

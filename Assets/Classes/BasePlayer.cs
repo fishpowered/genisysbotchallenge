@@ -65,7 +65,7 @@ abstract public class BasePlayer : MonoBehaviour {
     /// <summary>
     /// If true the player will attempt to shoot. See ShootPrimaryWeapon()
     /// </summary>
-    private bool shootPrimaryWeapon = false;
+    public bool shootPrimaryWeapon = false;
 
     /// <summary>
     /// Keeps track of time between shots of primary weapon
@@ -124,15 +124,6 @@ abstract public class BasePlayer : MonoBehaviour {
         UpdatePlayerMovement();
         UpdatePlayerRotation();
         UpdatePlayerShootingState();
-    }
-
-    /// <summary>
-    /// Instructs the bot to shoot their weapon (if it is possible for them to do so!)
-    /// </summary>
-    /// <see cref="CanShootPrimaryWeapon"/>
-    protected void ShootPrimaryWeapon()
-    {
-        shootPrimaryWeapon = true;
     }
 
     /// <summary>
@@ -229,7 +220,6 @@ abstract public class BasePlayer : MonoBehaviour {
                 primaryWeaponReloadTimer = 0;
             }
         }
-        shootPrimaryWeapon = false;
     }
 
     /// <summary>
