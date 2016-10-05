@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace TestingBots { 
 
@@ -8,6 +9,14 @@ namespace TestingBots {
     /// Use WASD keys to strafe, arrow left and right to rotate, and the space key to shoot.
     /// </summary>
     public class HumanControlledBot : BasePlayer {
+
+        /// <summary>
+        /// Called once after bot is spawned. This is for intialising your bot code.
+        /// </summary>
+        protected override void InitPlayer()
+        {
+            
+        }
 
         /// <summary>
         /// Called every physics cycle. This is where your bot logic can be written. 

@@ -101,7 +101,13 @@ abstract public class BasePlayer : MonoBehaviour {
             throw new UnityException("Player must be tagged as 'Player'");
         }
         gameObject.GetComponentInChildren<Text>().text = gameObject.name;
+        InitPlayer();
     }
+
+    /// <summary>
+    /// Called once after bot is spawned. This is for intialising your bot code.
+    /// </summary>
+    abstract protected void InitPlayer();
 
     /// <summary>
     /// Called every physics cycle. This is the starting point for your bot logic. 

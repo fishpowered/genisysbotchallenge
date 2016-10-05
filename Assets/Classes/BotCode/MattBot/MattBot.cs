@@ -6,6 +6,15 @@ namespace MattsBotCode
 
     public class MattBot : BasePlayer
     {
+
+        /// <summary>
+        /// Called once after bot is spawned. This is for intialising your bot code.
+        /// </summary>
+        protected override void InitPlayer()
+        {
+
+        }
+
         /// <summary>
         /// Keep track of how much time has elapsed
         /// </summary>

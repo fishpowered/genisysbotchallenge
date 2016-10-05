@@ -12,6 +12,14 @@ namespace TestingBots
         protected float timeLeftBeforeChangeOfDirection = 1f;
 
         /// <summary>
+        /// Called once after bot is spawned. This is for intialising your bot code.
+        /// </summary>
+        protected override void InitPlayer()
+        {
+
+        }
+
+        /// <summary>
         /// Called every physics cycle. This is where your bot logic can be written. 
         /// Should always call UpdatePlayerXxx methods but the order these occur in is up to you.
         /// </summary>
