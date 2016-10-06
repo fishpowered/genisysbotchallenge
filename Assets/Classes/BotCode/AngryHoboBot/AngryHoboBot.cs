@@ -27,7 +27,10 @@ namespace TestingBots
         {
             // Tell player to move forward and shoot if possible
             movePlayer = movementTypes.Forward;
-            ShootPrimaryWeapon();
+            if (CanShootPrimaryWeapon())
+            {
+                shootPrimaryWeapon = true;
+            }
 
             // Tell player to switch between left and right directions after a while
             if (timeLeftBeforeChangeOfDirection <= 0)
