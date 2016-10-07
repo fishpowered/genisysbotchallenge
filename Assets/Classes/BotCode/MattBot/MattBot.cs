@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace MattBot
 {
 
-    public class MattBot : BasePlayer
+    class MattBot : BasePlayer
     {
         public EnemyList enemyList;
 
@@ -14,6 +14,7 @@ namespace MattBot
         /// </summary>
         protected override void InitPlayer()
         {
+            enemyList = new EnemyList(gameObject);
             enemyList.PopulateList();
             
             
@@ -25,7 +26,7 @@ namespace MattBot
         /// </summary>
         protected override void UpdatePlayerState()
         {
-
+            enemyList.UpdateList();
             EnemySense enemySense = new EnemySense(this.transform, enemyList);
             enemySense.check();
         }
