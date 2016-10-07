@@ -22,7 +22,6 @@ namespace MattsBotCode
 
         /// <summary>
         /// Called every physics cycle. This is where your bot logic can be written. 
-        /// Should always call UpdatePlayerXxx methods but the order these occur in is up to you.
         /// </summary>
         protected override void UpdatePlayerState()
         {
