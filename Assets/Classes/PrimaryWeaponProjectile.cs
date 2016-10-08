@@ -9,12 +9,12 @@ public class PrimaryWeaponProjectile : MonoBehaviour {
     /// <summary>
     /// How long the projectile should remain alive before it disappears (assuming it doesn't hit something in the meantime)
     /// </summary>
-    private const float timeToLive = 1.5f;
+    public const float timeToLive = 1.5f;
 
     /// <summary>
     /// Primary weapon projectile velocity.
     /// </summary>
-    protected const float projectileVelocity = 7f;
+    public const float projectileVelocity = 7f;
 
     /// <summary>
     /// Current count of how long the projectile has been alive for

@@ -20,7 +20,6 @@ namespace TestingBots {
 
         /// <summary>
         /// Called every physics cycle. This is where your bot logic can be written. 
-        /// Should always call UpdatePlayerXxx methods but the order these occur in is up to you.
         /// </summary>
         protected override void UpdatePlayerState()
         {
@@ -42,10 +41,7 @@ namespace TestingBots {
             bool shootKey = Input.GetKey(KeyCode.Space);
 
             // Check for shooting commands
-            if (shootKey == true && CanShootPrimaryWeapon())
-            {
-                shootPrimaryWeapon = true;
-            }
+            shootPrimaryWeapon = (shootKey == true);
 
             // Check for movement commands
             if (forwardKey == true && strafeLeftKey == true)
