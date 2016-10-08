@@ -40,11 +40,6 @@ namespace MattBot
             foreach (Enemy enemy in this)
             {
 
-                if (!enemy.gameObject.activeSelf)
-                {
-                    Debug.Log("REMOVING enemy");
-                    this.Remove(enemy);
-                }
             }
         }
     }

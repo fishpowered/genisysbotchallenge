@@ -195,7 +195,7 @@ abstract public class BasePlayer : MonoBehaviour {
         {
             // Clear shot timer and fire weapon
             primaryWeaponShotTimer = 0f;
-            GameObject projectile = Instantiate(primaryWeaponProjectilePrefab); // TODO should be stored under bullets
+            GameObject projectile = UnityEngine.Object.Instantiate(primaryWeaponProjectilePrefab); // TODO should be stored under bullets
             projectile.transform.position = primaryWeapon.transform.position;
             projectile.transform.rotation = gameObject.transform.rotation;
             projectile.GetComponent<PrimaryWeaponProjectile>().source = gameObject;

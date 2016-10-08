@@ -28,7 +28,7 @@ namespace MattBot
             enemyList.UpdateList();
 
             EnemySense enemySense = new EnemySense(this.transform, enemyList);
-            enemySense.check();
+            enemySense.Check();
         }
     }
 }
