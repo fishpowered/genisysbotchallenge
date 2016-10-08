@@ -27,6 +27,7 @@ namespace MattBot
         protected override void UpdatePlayerState()
         {
             enemyList.UpdateList();
+
             EnemySense enemySense = new EnemySense(this.transform, enemyList);
             enemySense.check();
         }
