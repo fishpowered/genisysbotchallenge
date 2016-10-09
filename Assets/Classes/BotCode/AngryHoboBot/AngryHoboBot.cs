@@ -18,7 +18,7 @@ namespace TestingBots
         /// </summary>
         protected override void InitPlayer()
         {
-
+            shootPrimaryWeapon = false;
         }
 
         /// <summary>
@@ -28,10 +28,6 @@ namespace TestingBots
         {
             // Tell player to move forward and shoot if possible
             movePlayer = movementTypes.Forward;
-            if (CanShootPrimaryWeapon())
-            {
-                shootPrimaryWeapon = true;
-            }
 
             // Tell player to switch between left and right directions after a while
             if (timeLeftBeforeChangeOfDirection <= 0)

@@ -11,16 +11,19 @@ namespace MattBot
         public GameObject gameObject;
         public GameObject gunGameObject;
         public BasePlayer playerScript;
-        public float distanceFromPlayer;
-        public Vector3 lastPosition;
-
-        /// <summary>
-        /// Distance from our bot player gun to the enemy
-        /// </summary>
-        public float distanceFromPlayerGun;
-        public bool isBehindCover;
         protected float minShootingDistance;
 
+        // Information accumulated from senses...
+        public float distanceFromPlayer;
+        public float distanceFromPlayerGun;
+        public Vector3 lastPosition;
+        public Vector3 predictedPosition;
+        public BasePlayer.rotationTypes fastestWayForPlayerToRotateToEnemy;
+        public float timeForPlayerToRotateToEnemy;
+        public float timeForEnemyToRotateToPlayer;
+        public bool isBehindCover;
+        public float priorityLevelForPlayer;
+        
         public Enemy(GameObject enemyGameObject)
         {
             gameObject = enemyGameObject;
@@ -31,7 +34,12 @@ namespace MattBot
 
         public bool CanBeShot()
         {
-            return (gameObject.activeSelf && !isBehindCover && distanceFromPlayer < minShootingDistance);
+            return (IsAlive() && !isBehindCover && distanceFromPlayer < minShootingDistance);
+        }
+
+        public bool IsAlive()
+        {
+            return (gameObject.activeSelf);
         }
     }
 }

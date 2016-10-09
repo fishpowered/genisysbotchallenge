@@ -42,5 +42,21 @@ namespace MattBot
 
             }
         }
+
+        /// <summary>
+        /// Populate list with all enemy players
+        /// </summary>
+        public Enemy GetEnemyWithHighestPriorityLevel()
+        {
+            Enemy enemyToReturn = null;
+            foreach (Enemy enemy in this)
+            {
+                if(enemy.IsAlive() && (enemyToReturn == null || enemy.priorityLevelForPlayer > enemyToReturn.priorityLevelForPlayer ))
+                {
+                    enemyToReturn = enemy;
+                }
+            }
+            return enemyToReturn;
+        }
     }
 }

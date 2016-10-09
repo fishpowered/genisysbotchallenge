@@ -7,7 +7,9 @@ namespace MattBot
 
     class MattBot : BasePlayer
     {
-        public EnemyList enemyList;
+        protected EnemyList enemyList;
+        protected EnemySense enemySense;
+        protected SituationManager situationManager;
 
         /// <summary>
         /// Called once after bot is spawned. This is for intialising your bot code.
@@ -16,8 +18,8 @@ namespace MattBot
         {
             enemyList = new EnemyList(gameObject);
             enemyList.PopulateList();
-            
-            
+            enemySense = new EnemySense(this.transform, enemyList);
+            situationManager = new SituationManager(this, enemyList);
         }
 
         /// <summary>
@@ -27,8 +29,14 @@ namespace MattBot
         {
             enemyList.UpdateList();
 
-            EnemySense enemySense = new EnemySense(this.transform, enemyList);
-            enemySense.Check();
+            // Check status on all enemies
+            enemySense.Update();
+
+            // Check status on all projectiles
+            // TODO
+
+            // Determine situation and best course of action
+            situationManager.Update();
         }
     }
 }
