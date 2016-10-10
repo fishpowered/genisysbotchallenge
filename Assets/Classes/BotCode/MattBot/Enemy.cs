@@ -10,7 +10,7 @@ namespace MattBot
     {
         public GameObject gameObject;
         public GameObject gunGameObject;
-        public BasePlayer playerScript;
+        public BasePlayer basePlayerScript;
         protected float minShootingDistance;
 
         // Information accumulated from senses...
@@ -23,12 +23,12 @@ namespace MattBot
         public float timeForEnemyToRotateToPlayer;
         public bool isBehindCover;
         public float priorityLevelForPlayer;
-        
+
         public Enemy(GameObject enemyGameObject)
         {
             gameObject = enemyGameObject;
             gunGameObject = gameObject.transform.Find("Gun").gameObject;
-            playerScript = gameObject.GetComponent<BasePlayer>();
+            basePlayerScript = gameObject.GetComponent<BasePlayer>();
             minShootingDistance = (PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.timeToLive) + 1f;
         }
 

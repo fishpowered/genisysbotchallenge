@@ -12,8 +12,8 @@ namespace MattBot
         protected Transform self;
         protected Transform selfGun;
         protected EnemyList enemyList;
-        public bool enemyInCover;
         protected MattBot selfPlayerScript;
+        protected float minShootingDistance;
 
         public EnemySense(Transform self, EnemyList enemyList)
         {
@@ -21,6 +21,7 @@ namespace MattBot
             this.self = self;
             this.selfGun = self.FindChild("Gun");
             this.selfPlayerScript = self.GetComponent<MattBot>();
+            this.minShootingDistance = (PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.timeToLive) + 1f;
         }
 
         public void Update()
@@ -45,18 +46,22 @@ namespace MattBot
 
         public float CalculateEnemyPriorityFactor(Enemy enemy)
         {
-            float isShootableFactor = (enemy.CanBeShot() ? 1 : 0) * 0.5f; 
-            // TODO SHOULD HAVE SEPARATE FACTORS FOR isBehindCover AND isOutOfShootingRange SO THEY ARE NOT LUMPED IN TOGETHER
-            // TODO maybe distanceToEnemy should be multiplied by time taken to turn
+            if (enemy.IsAlive() == false)
+            {
+                return 0f;
+            }
+            float isOutOfShootingRangeFactor = (enemy.distanceFromPlayer < minShootingDistance ? 1 : 0) * 0.4f;
+            // TODO maybe distanceToEnemy should be multiplied by time taken to turn and facing directions?
             float distanceToEnemyFactor = (1f - (enemy.distanceFromPlayer / 30f)) * 0.2f;
             float timeRequiredToRotate180Degrees = (Mathf.Deg2Rad * 180) / (BasePlayer.rotationVelocity * Time.fixedDeltaTime);
             float timeForEnemyToTurnToYouFactor = (1f - (enemy.timeForEnemyToRotateToPlayer / timeRequiredToRotate180Degrees)) * 0.14f;
+            float isBehindCoverFactor = (enemy.isBehindCover ? 0 : 1) * 0.2f;
             float timeForSelfToTurnToEnemyFactor = (1f - (enemy.timeForPlayerToRotateToEnemy / timeRequiredToRotate180Degrees)) * 0.08f;
             // TODO amount of damage dealt to self * 0.04f
             // TODO amount of damage dealt to others * 0.02f
-            // TODO amount of health remaining * 0.02f
-            float totalPriorityFactor = isShootableFactor + distanceToEnemyFactor + timeForEnemyToTurnToYouFactor + timeForSelfToTurnToEnemyFactor;
-            Debug.Log("SHOOTABLE " + isShootableFactor + " * DISTANCE " + distanceToEnemyFactor + " ENEMY TURN " + timeForEnemyToTurnToYouFactor + " PLAYER TURN " + timeForSelfToTurnToEnemyFactor + " = " + totalPriorityFactor);
+            float healthRemainingFactor = (1f - ((float)enemy.basePlayerScript.GetHealth() / 100f)) * 0.02f;
+            float totalPriorityFactor = isOutOfShootingRangeFactor + distanceToEnemyFactor + timeForEnemyToTurnToYouFactor + isBehindCoverFactor + timeForSelfToTurnToEnemyFactor + healthRemainingFactor;
+          //  Debug.Log("SHOOTABLE " + isOutOfShootingRangeFactor + " * DISTANCE " + distanceToEnemyFactor + " ENEMY TURN " + timeForEnemyToTurnToYouFactor + " PLAYER TURN " + timeForSelfToTurnToEnemyFactor + " NOT IN COVER " + isBehindCoverFactor + " HEALTH " + healthRemainingFactor + " = " + totalPriorityFactor);
             return totalPriorityFactor;
         }
     }

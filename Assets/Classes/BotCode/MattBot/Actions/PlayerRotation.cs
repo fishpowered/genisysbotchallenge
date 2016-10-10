@@ -28,7 +28,7 @@ namespace MattBot
         public static float GetAngleRequiredToTurnToFaceTarget(Transform playerSelf, Vector3 target, bool absoluteAngle)
         {
             Vector3 playerForwardFacingVector = playerSelf.transform.position + (playerSelf.transform.forward); // need to get the forward facing vector so we know the direction the player is facing
-
+            // TODO NEED TO ACCOUNT FOR GUN BEING OUTSIDE OF PLAYER BODY
             float returnAngle = Vector3.Angle(playerSelf.transform.position - target, playerForwardFacingVector - playerSelf.transform.position) - 180f;
 
             if (absoluteAngle)
