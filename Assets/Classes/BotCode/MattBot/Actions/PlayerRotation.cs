@@ -12,9 +12,9 @@ namespace MattBot
     class PlayerRotation
     {
 
-        public static BasePlayer.rotationTypes GetRotationTypeToFaceTarget(Transform playerSelf, Vector3 target)
+        public static BasePlayer.rotationTypes GetRotationTypeToFaceTarget(Transform gun, Vector3 target)
         {
-            float angle = GetAngleRequiredToTurnToFaceTarget(playerSelf, target, false);
+            float angle = GetAngleRequiredToTurnAndAimAtTarget(gun, target, false);
             if (angle >= 0f)
             {
                 return BasePlayer.rotationTypes.Left;
@@ -25,11 +25,11 @@ namespace MattBot
             }
         }
 
-        public static float GetAngleRequiredToTurnToFaceTarget(Transform playerSelf, Vector3 target, bool absoluteAngle)
+        public static float GetAngleRequiredToTurnAndAimAtTarget(Transform gun, Vector3 target, bool absoluteAngle)
         {
-            Vector3 playerForwardFacingVector = playerSelf.transform.position + (playerSelf.transform.forward); // need to get the forward facing vector so we know the direction the player is facing
+            Vector3 playerForwardFacingVector = gun.transform.position + (gun.transform.forward); // need to get the forward facing vector so we know the direction the player is facing
             // TODO NEED TO ACCOUNT FOR GUN BEING OUTSIDE OF PLAYER BODY
-            float returnAngle = Vector3.Angle(playerSelf.transform.position - target, playerForwardFacingVector - playerSelf.transform.position) - 180f;
+            float returnAngle = Vector3.Angle(gun.transform.position - target, playerForwardFacingVector - gun.transform.position) - 180f;
 
             if (absoluteAngle)
             {
@@ -37,8 +37,8 @@ namespace MattBot
             }
             else
             {
-                Vector3 playerRightFacingVector = playerSelf.transform.position + (playerSelf.transform.right * 2f);
-                Vector3 playerLeftFacingVector = playerSelf.transform.position + (playerSelf.transform.right * -2f);
+                Vector3 playerRightFacingVector = gun.transform.position + (gun.transform.right * 2f);
+                Vector3 playerLeftFacingVector = gun.transform.position + (gun.transform.right * -2f);
                 //Debug.DrawLine(playerSelf.position, playerForwardFacingVector, Color.magenta);
                 //Debug.DrawLine(playerSelf.position, playerRightFacingVector, Color.magenta);
                 //Debug.DrawLine(playerSelf.position, playerLeftFacingVector, Color.magenta);
@@ -53,9 +53,9 @@ namespace MattBot
             }
         }
 
-        public static float GetTimeRequiredToFaceTarget(Transform playerSelf, Vector3 target)
+        public static float GetTimeRequiredToFaceTarget(Transform sourceTransform, Vector3 target)
         {
-            float angleRequiredToTurn = GetAngleRequiredToTurnToFaceTarget(playerSelf, target, true);
+            float angleRequiredToTurn = GetAngleRequiredToTurnAndAimAtTarget(sourceTransform, target, true);
             return (Mathf.Deg2Rad * angleRequiredToTurn) / (BasePlayer.rotationVelocity * Time.fixedDeltaTime);
         }
     }

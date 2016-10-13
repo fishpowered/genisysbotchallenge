@@ -33,12 +33,16 @@ namespace MattBot
                 enemy.isBehindCover = Sense.Linecast(self.position, enemy.gameObject.transform.position, out hitInfo, 1 << LayerMask.NameToLayer("Environment"), Color.red);
                 enemy.distanceFromPlayer = Vector3.Distance(self.position, enemy.gameObject.transform.position);
                 enemy.distanceFromPlayerGun = Vector3.Distance(selfGun.position, enemy.gameObject.transform.position);
+                enemy.predictedMovementDirection = this.GetPredictedMovementDirection(enemy);
+                enemy.predictedRotation = enemy.basePlayerScript.rotatePlayer;
                 float timeItWouldTakePimaryWeaponProjectileToHitEnemy = enemy.distanceFromPlayerGun / (PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
-                enemy.predictedPosition = MovementPrediction.EstimatePositionAfterTime(enemy.lastPosition, enemy.gameObject.transform, BasePlayer.moveVelocity, timeItWouldTakePimaryWeaponProjectileToHitEnemy);
-                enemy.fastestWayForPlayerToRotateToEnemy = PlayerRotation.GetRotationTypeToFaceTarget(self, enemy.predictedPosition);
-                enemy.timeForPlayerToRotateToEnemy = PlayerRotation.GetTimeRequiredToFaceTarget(self, enemy.predictedPosition);
+                enemy.predictedPosition = MovementPrediction.EstimatePositionAfterTime(enemy.lastPosition, enemy.gameObject.transform, BasePlayer.moveVelocity, timeItWouldTakePimaryWeaponProjectileToHitEnemy, enemy.lastRotation, enemy.predictedRotation, enemy.predictedMovementDirection);
+                enemy.fastestWayForPlayerToRotateToEnemy = PlayerRotation.GetRotationTypeToFaceTarget(selfGun, enemy.predictedPosition);
+                enemy.timeForPlayerToRotateToEnemy = PlayerRotation.GetTimeRequiredToFaceTarget(selfGun, enemy.predictedPosition);
                 enemy.timeForEnemyToRotateToPlayer = PlayerRotation.GetTimeRequiredToFaceTarget(enemy.gameObject.transform, self.gameObject.transform.position);
                 enemy.lastPosition = new Vector3(enemy.gameObject.transform.position.x, enemy.gameObject.transform.position.y, enemy.gameObject.transform.position.z);
+                enemy.lastRotation = enemy.basePlayerScript.rotatePlayer;
+                enemy.lastdMovementDirection = enemy.basePlayerScript.movePlayer;
                 enemy.priorityLevelForPlayer = this.CalculateEnemyPriorityFactor(enemy);
                 Debug.DrawLine(selfGun.position, enemy.predictedPosition, Color.green);
             }
@@ -56,13 +60,25 @@ namespace MattBot
             float timeRequiredToRotate180Degrees = (Mathf.Deg2Rad * 180) / (BasePlayer.rotationVelocity * Time.fixedDeltaTime);
             float timeForEnemyToTurnToYouFactor = (1f - (enemy.timeForEnemyToRotateToPlayer / timeRequiredToRotate180Degrees)) * 0.14f;
             float isBehindCoverFactor = (enemy.isBehindCover ? 0 : 1) * 0.2f;
-            float timeForSelfToTurnToEnemyFactor = (1f - (enemy.timeForPlayerToRotateToEnemy / timeRequiredToRotate180Degrees)) * 0.08f;
+            float timeForSelfToTurnToEnemyFactor = (1f - (enemy.timeForPlayerToRotateToEnemy / timeRequiredToRotate180Degrees)) * 0.14f;
             // TODO amount of damage dealt to self * 0.04f
             // TODO amount of damage dealt to others * 0.02f
             float healthRemainingFactor = (1f - ((float)enemy.basePlayerScript.GetHealth() / 100f)) * 0.02f;
             float totalPriorityFactor = isOutOfShootingRangeFactor + distanceToEnemyFactor + timeForEnemyToTurnToYouFactor + isBehindCoverFactor + timeForSelfToTurnToEnemyFactor + healthRemainingFactor;
           //  Debug.Log("SHOOTABLE " + isOutOfShootingRangeFactor + " * DISTANCE " + distanceToEnemyFactor + " ENEMY TURN " + timeForEnemyToTurnToYouFactor + " PLAYER TURN " + timeForSelfToTurnToEnemyFactor + " NOT IN COVER " + isBehindCoverFactor + " HEALTH " + healthRemainingFactor + " = " + totalPriorityFactor);
             return totalPriorityFactor;
+        }
+
+        public BasePlayer.movementTypes GetPredictedMovementDirection(Enemy enemy)
+        {
+            if (enemy.basePlayerScript.movePlayer != BasePlayer.movementTypes.None)
+            {
+                return enemy.basePlayerScript.movePlayer;
+            }
+            else
+            {
+                return enemy.lastdMovementDirection;
+            }
         }
     }
 }
