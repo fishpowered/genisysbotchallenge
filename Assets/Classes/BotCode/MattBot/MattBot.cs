@@ -8,7 +8,9 @@ namespace MattBot
     class MattBot : BasePlayer
     {
         protected EnemyList enemyList;
+        protected BulletList bulletList;
         protected EnemySense enemySense;
+        protected BulletSense bulletSense;
         protected SituationManager situationManager;
 
         /// <summary>
@@ -18,7 +20,9 @@ namespace MattBot
         {
             enemyList = new EnemyList(gameObject);
             enemyList.PopulateList();
+            bulletList = new BulletList(gameObject);
             enemySense = new EnemySense(this.transform, enemyList);
+            bulletSense = new BulletSense(this, bulletList);
             situationManager = new SituationManager(this, enemyList);
         }
 
@@ -28,9 +32,11 @@ namespace MattBot
         protected override void UpdatePlayerState()
         {
             enemyList.UpdateList();
+            bulletList.UpdateList();
 
             // Check status on all enemies
             enemySense.Update();
+            bulletSense.Update();
 
             // Check status on all projectiles
             // TODO

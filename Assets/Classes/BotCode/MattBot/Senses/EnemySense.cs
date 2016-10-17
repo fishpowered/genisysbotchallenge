@@ -9,18 +9,18 @@ namespace MattBot
     /// </summary>
     class EnemySense : Sense
     {
-        protected Transform self;
-        protected Transform selfGun;
+        protected Transform playerSelfTransform;
+        protected Transform playerSelfGunTransform;
         protected EnemyList enemyList;
-        protected MattBot selfPlayerScript;
+        protected MattBot playerSelfScript;
         protected float minShootingDistance;
 
-        public EnemySense(Transform self, EnemyList enemyList)
+        public EnemySense(Transform playerSelf, EnemyList enemyList)
         {
             this.enemyList = enemyList;
-            this.self = self;
-            this.selfGun = self.FindChild("Gun");
-            this.selfPlayerScript = self.GetComponent<MattBot>();
+            this.playerSelfTransform = playerSelf;
+            this.playerSelfGunTransform = playerSelf.FindChild("Gun");
+            this.playerSelfScript = playerSelf.GetComponent<MattBot>();
             this.minShootingDistance = (PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.timeToLive) + 1f;
         }
 
@@ -30,21 +30,23 @@ namespace MattBot
             {
                 // Careful with the ordering...
                 RaycastHit hitInfo = new RaycastHit();
-                enemy.isBehindCover = Sense.Linecast(self.position, enemy.gameObject.transform.position, out hitInfo, 1 << LayerMask.NameToLayer("Environment"), Color.red);
-                enemy.distanceFromPlayer = Vector3.Distance(self.position, enemy.gameObject.transform.position);
-                enemy.distanceFromPlayerGun = Vector3.Distance(selfGun.position, enemy.gameObject.transform.position);
+                enemy.isBehindCover = Sense.Linecast(playerSelfTransform.position, enemy.gameObject.transform.position, out hitInfo, 1 << LayerMask.NameToLayer("Environment"), Color.gray);
+                enemy.distanceFromPlayer = Vector3.Distance(playerSelfTransform.position, enemy.gameObject.transform.position);
+                enemy.distanceFromPlayerGun = Vector3.Distance(playerSelfGunTransform.position, enemy.gameObject.transform.position);
                 enemy.predictedMovementDirection = this.GetPredictedMovementDirection(enemy);
                 enemy.predictedRotation = enemy.basePlayerScript.rotatePlayer;
                 float timeItWouldTakePimaryWeaponProjectileToHitEnemy = enemy.distanceFromPlayerGun / (PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
                 enemy.predictedPosition = MovementPrediction.EstimatePositionAfterTime(enemy.lastPosition, enemy.gameObject.transform, BasePlayer.moveVelocity, timeItWouldTakePimaryWeaponProjectileToHitEnemy, enemy.lastRotation, enemy.predictedRotation, enemy.predictedMovementDirection);
-                enemy.fastestWayForPlayerToRotateToEnemy = PlayerRotation.GetRotationTypeToFaceTarget(selfGun, enemy.predictedPosition);
-                enemy.timeForPlayerToRotateToEnemy = PlayerRotation.GetTimeRequiredToFaceTarget(selfGun, enemy.predictedPosition);
-                enemy.timeForEnemyToRotateToPlayer = PlayerRotation.GetTimeRequiredToFaceTarget(enemy.gameObject.transform, self.gameObject.transform.position);
+                enemy.fastestWayForPlayerToRotateToEnemy = PlayerRotation.GetRotationTypeToFaceTarget(playerSelfGunTransform, enemy.predictedPosition);
+                enemy.timeForPlayerToRotateToEnemy = PlayerRotation.GetTimeRequiredToFaceTarget(playerSelfGunTransform, enemy.predictedPosition);
+                enemy.timeForEnemyToRotateToPlayer = PlayerRotation.GetTimeRequiredToFaceTarget(enemy.gameObject.transform, playerSelfTransform.gameObject.transform.position);
                 enemy.lastPosition = new Vector3(enemy.gameObject.transform.position.x, enemy.gameObject.transform.position.y, enemy.gameObject.transform.position.z);
                 enemy.lastRotation = enemy.basePlayerScript.rotatePlayer;
                 enemy.lastdMovementDirection = enemy.basePlayerScript.movePlayer;
                 enemy.priorityLevelForPlayer = this.CalculateEnemyPriorityFactor(enemy);
-                Debug.DrawLine(selfGun.position, enemy.predictedPosition, Color.green);
+                if (enemy.IsAlive()) { 
+                    Debug.DrawLine(playerSelfGunTransform.position, enemy.predictedPosition, Color.green);
+                }
             }
         }
 

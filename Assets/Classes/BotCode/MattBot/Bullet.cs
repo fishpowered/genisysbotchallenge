@@ -6,19 +6,20 @@ using System.Text;
 
 namespace MattBot
 {
-    class Enemy
+    class Bullet
     {
         public GameObject gameObject;
-        public GameObject gunGameObject;
-        public BasePlayer basePlayerScript;
+        public PrimaryWeaponProjectile baseScript;
         protected float minShootingDistance;
 
         // Information accumulated from senses...
-        public float distanceFromPlayer;
-        public float distanceFromPlayerGun;
+        //public float distanceFromPlayer;
+        //public float distanceFromPlayerGun;
+        public float timeToLive;
+        public float timeAlive = 0f;
         public Vector3 lastPosition;
         public Vector3 predictedPosition;
-        public BasePlayer.rotationTypes lastRotation;
+        /*public BasePlayer.rotationTypes lastRotation;
         public BasePlayer.rotationTypes predictedRotation;
         public BasePlayer.rotationTypes fastestWayForPlayerToRotateToEnemy;
         public BasePlayer.movementTypes predictedMovementDirection;
@@ -27,23 +28,12 @@ namespace MattBot
         public float timeForEnemyToRotateToPlayer;
         public bool isBehindCover;
         public float priorityLevelForPlayer;
-
-        public Enemy(GameObject enemyGameObject)
+        */
+        public Bullet(GameObject bulletGameObject)
         {
-            gameObject = enemyGameObject;
-            gunGameObject = gameObject.transform.Find("Gun").gameObject;
-            basePlayerScript = gameObject.GetComponent<BasePlayer>();
+            gameObject = bulletGameObject;
+            baseScript = gameObject.GetComponent<PrimaryWeaponProjectile>();
             minShootingDistance = (PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.timeToLive) + 1f;
-        }
-
-        public bool CanBeShot()
-        {
-            return (IsAlive() && !isBehindCover && distanceFromPlayer < minShootingDistance);
-        }
-
-        public bool IsInRange()
-        {
-            return (distanceFromPlayer < minShootingDistance);
         }
 
         public bool IsAlive()

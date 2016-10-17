@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,18 @@ namespace MattBot
         public void Update()
         {
             Enemy enemyTarget = enemyList.GetEnemyWithHighestPriorityLevel();
-            if (enemyTarget != null) { 
+            if (enemyTarget != null) {
                 selfPlayerScript.rotatePlayer = enemyTarget.fastestWayForPlayerToRotateToEnemy;
-                // Enemy enemyTarget = GetHighestPriorityEnemyTarget();
+                if (enemyTarget.IsInRange())
+                {
+                    // TODO should only shoot if predicted position is exposed
+                    selfPlayerScript.shootPrimaryWeapon = true;
+                    // Enemy enemyTarget = GetHighestPriorityEnemyTarget();
+                }
+                else
+                {
+                    selfPlayerScript.shootPrimaryWeapon = false;
+                }
             }
         }
     }

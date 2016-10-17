@@ -7,6 +7,18 @@ namespace MattBot
     /// </summary>
     class MovementPrediction
     {
+
+        public static Vector3 EstimateProjectilePositionAfterTime(Vector3 lastKnownPosition, Transform currentTransform, float movementVelocity, float time)
+        {
+            if (lastKnownPosition == null)
+            {
+                return currentTransform.position;
+            }
+            Vector3 predictedLocation = currentTransform.forward * PrimaryWeaponProjectile.projectileVelocity * time;
+
+            return currentTransform.position + predictedLocation;
+        }
+
         public static Vector3 EstimatePositionAfterTime(Vector3 lastKnownPosition, Transform currentTransform, float movementVelocity, float time, BasePlayer.rotationTypes lastKnownRotation, BasePlayer.rotationTypes currentRotation, BasePlayer.movementTypes predictedMovementType)
         {
             if (lastKnownPosition == null)
@@ -18,7 +30,7 @@ namespace MattBot
             Vector3 movementBearing = currentTransform.position - lastKnownPosition;
 
             // Bearing ray
-            Debug.DrawRay(currentTransform.position, (movementBearing * time), Color.cyan);
+            //Debug.DrawRay(currentTransform.position, (movementBearing * time), Color.cyan);
 
             //Debug.Log("Current {"+currentTransform.position.ToString() + "} - {" + lastKnownPosition.ToString() + "} = "+ movementBearing.x);
 
@@ -37,10 +49,10 @@ namespace MattBot
                         switch (currentRotation)
                         {
                             case BasePlayer.rotationTypes.Left:
-                                predictedLocation += (currentTransform.right * tweakFactor) * -1f;
+                                predictedLocation += ((currentTransform.right + currentTransform.forward) * tweakFactor) * -1f;
                                 break;
                             case BasePlayer.rotationTypes.Right:
-                                predictedLocation += (currentTransform.right * tweakFactor);
+                                predictedLocation += ((currentTransform.right -currentTransform.forward) * tweakFactor);
                                 break;
                         }
                         break;
@@ -48,10 +60,10 @@ namespace MattBot
                         switch (currentRotation)
                         {
                             case BasePlayer.rotationTypes.Left:
-                                predictedLocation += (currentTransform.right * tweakFactor);
+                                predictedLocation += ((currentTransform.right + currentTransform.forward) * tweakFactor);
                                 break;
                             case BasePlayer.rotationTypes.Right:
-                                predictedLocation += (currentTransform.right * tweakFactor) * -1f;
+                                predictedLocation += ((currentTransform.right - currentTransform.forward) * tweakFactor) * -1f;
                                 break;
                         }
                         break;
@@ -76,6 +88,24 @@ namespace MattBot
                                 predictedLocation += ((currentTransform.forward - currentTransform.right) * tweakFactor);
                                 break;
                         }
+                        break;
+                    case BasePlayer.movementTypes.ForwardAndLeft:
+                        // TODO
+                        switch (currentRotation)
+                        {
+                            case BasePlayer.rotationTypes.Left: // moving forward+left and rotating left, so predicted position should be back and left
+                             //   predictedLocation += ((-currentTransform.forward + currentTransform.right)) * tweakFactor;
+                                break;
+                            case BasePlayer.rotationTypes.Right: // moving right and rotating left, so predicted position should be forward and left
+                          //      predictedLocation += ((currentTransform.forward - currentTransform.right) * tweakFactor);
+                                break;
+                        }
+                        break;
+                    case BasePlayer.movementTypes.ForwardAndRight:
+                        break;
+                    case BasePlayer.movementTypes.BackAndLeft:
+                        break;
+                    case BasePlayer.movementTypes.BackAndRight:
                         break;
                 }
             }
