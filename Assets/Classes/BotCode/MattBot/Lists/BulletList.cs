@@ -45,6 +45,28 @@ namespace MattBot
         }
 
         /// <summary>
+        /// Check all bullets heading towards the player and return the closest
+        /// </summary>
+        /// <returns></returns>
+        public Bullet GetClosestBulletToStrikingPlayerSelf()
+        {
+            Bullet closestBullet = null;
+            foreach (Bullet bullet in this.Values)
+            {
+                if(bullet.gameObject != null && bullet.distanceFromStrikingPlayer!=null && (closestBullet == null || bullet.distanceFromStrikingPlayer < closestBullet.distanceFromStrikingPlayer))
+                {
+                    closestBullet = bullet;
+                }
+            }
+            if(closestBullet!= null){
+                return closestBullet;
+            }else{
+                return null;
+            }
+            
+        }
+
+        /// <summary>
         /// Populate list with all enemy players
         /// </summary>
         /*public Enemy GetEnemyWithHighestPriorityLevel()

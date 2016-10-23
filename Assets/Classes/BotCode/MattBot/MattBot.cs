@@ -23,7 +23,7 @@ namespace MattBot
             bulletList = new BulletList(gameObject);
             enemySense = new EnemySense(this.transform, enemyList);
             bulletSense = new BulletSense(this, bulletList);
-            situationManager = new SituationManager(this, enemyList);
+            situationManager = new SituationManager(this, enemyList, bulletList);
         }
 
         /// <summary>

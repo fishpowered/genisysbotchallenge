@@ -15,6 +15,7 @@ namespace MattBot
     ///     - direction to dodge weighted factors:
     ///         - how far player can move in a particular direction (freedom/space)
     ///         - likeliness to hit a projectile
+    ///             - rather than copying player gameobject, just use a simple radius check
     ///         - enemy spacing around
     /// </summary>
     class BulletSense : Sense
@@ -22,11 +23,13 @@ namespace MattBot
         protected MattBot playerSelfScript;
         protected BulletList bulletList;
 
-        public BulletSense (MattBot playerSelfScript, BulletList bulletList)
+        //protected int 
+        public BulletSense(MattBot playerSelfScript, BulletList bulletList)
         {
-            
+
             this.playerSelfScript = playerSelfScript;
             this.bulletList = bulletList;
+
         }
 
         /// <summary>
@@ -34,25 +37,40 @@ namespace MattBot
         /// </summary>
         public void Update()
         {
-            
+
             float fixedDeltaTime = Time.fixedDeltaTime;
-            foreach(Bullet bullet in this.bulletList.Values)
+            foreach (Bullet bullet in this.bulletList.Values)
             {
-                if (bullet.gameObject != null) { 
+                if (bullet.gameObject != null)
+                {
                     RaycastHit hitInfo = new RaycastHit();
 
-                    bullet.timeToLive = (PrimaryWeaponProjectile.timeToLive - bullet.timeAlive) * 1f; // * PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.projectileVelocity; // projectileVelocity * Time.fixedDeltaTime;
-                    Debug.Log(bullet.timeToLive * PrimaryWeaponProjectile.projectileVelocity);
-                    
-                    
+                    bullet.timeToLive = (PrimaryWeaponProjectile.timeToLive - bullet.timeAlive); // * PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.projectileVelocity; // projectileVelocity * Time.fixedDeltaTime;
+
+                    //hitInfo.
                     bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
-                    // TODO NEED TO CONFIGURE THE LINECAST TO DETECT HITS AGAINST THE PLAYER
-                    Sense.Linecast(bullet.gameObject.transform.position, bullet.predictedPosition, out hitInfo, 0, Color.red);
+                    bullet.proximityToPlayer = Vector3.Distance(bullet.gameObject.transform.position, playerSelfScript.gameObject.transform.position);
+                    if (BulletLineCast(bullet.gameObject.transform, bullet.predictedPosition, bullet.radius, out hitInfo, 1 << LayerMask.NameToLayer("Players"), Color.red))
+                    {
+                        bullet.distanceFromStrikingPlayer = hitInfo.distance;
+                    }
+                    else
+                    {
+                        bullet.distanceFromStrikingPlayer = null;
+                    }
+                    //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
                     bullet.lastPosition = bullet.gameObject.transform.position;
                     bullet.timeAlive += fixedDeltaTime;
                 }
             }
         }
-        
+
+        private bool BulletLineCast(Transform bulletTransform, Vector3 end, float bulletRadius, out RaycastHit hitInfo, int layerMask, Color debugLineColour)
+        {
+            // TODO WRITE OWN COLLISSION DETECTION, LINECAST SEEMS INCONSISTENT, USE DISTANCE FROM BULLET WITH PADDING
+            bool leftEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * -bulletRadius, end + bulletTransform.right * -bulletRadius, out hitInfo, layerMask, debugLineColour);
+            bool rightEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * bulletRadius, end + bulletTransform.right * bulletRadius, out hitInfo, layerMask, debugLineColour);
+            return (leftEdge || rightEdge);
+        }
     }
 }

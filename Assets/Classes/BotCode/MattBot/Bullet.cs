@@ -13,12 +13,14 @@ namespace MattBot
         protected float minShootingDistance;
 
         // Information accumulated from senses...
-        //public float distanceFromPlayer;
+        public Nullable<float> distanceFromStrikingPlayer;
+        public float proximityToPlayer;
         //public float distanceFromPlayerGun;
         public float timeToLive;
         public float timeAlive = 0f;
         public Vector3 lastPosition;
         public Vector3 predictedPosition;
+        public float radius;
         /*public BasePlayer.rotationTypes lastRotation;
         public BasePlayer.rotationTypes predictedRotation;
         public BasePlayer.rotationTypes fastestWayForPlayerToRotateToEnemy;
@@ -34,6 +36,7 @@ namespace MattBot
             gameObject = bulletGameObject;
             baseScript = gameObject.GetComponent<PrimaryWeaponProjectile>();
             minShootingDistance = (PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.timeToLive) + 1f;
+            radius = gameObject.GetComponent<Renderer>().bounds.size.x / 2f;
         }
 
         public bool IsAlive()

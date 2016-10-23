@@ -12,11 +12,13 @@ namespace MattBot
     class SituationManager
     {
         private EnemyList enemyList;
+        private BulletList bulletList;
         private MattBot selfPlayerScript;
 
-        public SituationManager(MattBot selfPlayerScript, EnemyList enemyList)
+        public SituationManager(MattBot selfPlayerScript, EnemyList enemyList, BulletList bulletList)
         {
             this.enemyList = enemyList;
+            this.bulletList = bulletList;
             this.selfPlayerScript = selfPlayerScript;
         }
 
@@ -28,13 +30,22 @@ namespace MattBot
                 if (enemyTarget.IsInRange())
                 {
                     // TODO should only shoot if predicted position is exposed
-                    selfPlayerScript.shootPrimaryWeapon = true;
-                    // Enemy enemyTarget = GetHighestPriorityEnemyTarget();
+                    //selfPlayerScript.shootPrimaryWeapon = true;
+                   
                 }
                 else
                 {
                     selfPlayerScript.shootPrimaryWeapon = false;
                 }
+            }
+            Bullet closestBullet = bulletList.GetClosestBulletToStrikingPlayerSelf();
+            if (closestBullet != null && closestBullet.distanceFromStrikingPlayer < 5f)
+            {
+                selfPlayerScript.movePlayer = BasePlayer.movementTypes.Left;
+                //selfPlayerScript.shootPrimaryWeapon = true;
+            }else
+            {
+                selfPlayerScript.movePlayer = BasePlayer.movementTypes.None;
             }
         }
     }
