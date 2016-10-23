@@ -34,13 +34,13 @@ namespace MattBot
             }
 
             // Check for dead bullets
-            foreach (Bullet bullet in this.Values)
-            {
+           // foreach (Bullet bullet in this.Values)
+            //{
                 //if(bullet.gameObject == null)
                 //{
                 //    Remove(bullet.gameObject);
                 //}
-            }
+            //}
             //Debug.Log("BULLET COUNT " + this.Count);
         }
 

@@ -37,10 +37,10 @@ namespace MattBot
         /// </summary>
         public void UpdateList()
         {
-            foreach (Enemy enemy in this)
+           /* foreach (Enemy enemy in this)
             {
 
-            }
+            }*/
         }
 
         /// <summary>

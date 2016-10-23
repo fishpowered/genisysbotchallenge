@@ -50,13 +50,17 @@ namespace MattBot
                     //hitInfo.
                     bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
                     bullet.proximityToPlayer = Vector3.Distance(bullet.gameObject.transform.position, playerSelfScript.gameObject.transform.position);
-                    if (BulletLineCast(bullet.gameObject.transform, bullet.predictedPosition, bullet.radius, out hitInfo, 1 << LayerMask.NameToLayer("Players"), Color.red))
+                    if (DEPRECATED_BulletLineCast(bullet.gameObject.transform, bullet.predictedPosition, bullet.radius, out hitInfo, 1 << LayerMask.NameToLayer("Players"), Color.red))
                     {
                         bullet.distanceFromStrikingPlayer = hitInfo.distance;
                     }
                     else
                     {
                         bullet.distanceFromStrikingPlayer = null;
+                    }
+                    if(WillCurrentBulletPositionCollideWithCurrentPlayerPosition(bullet.gameObject.transform.position, bullet.radius, PrimaryWeaponProjectile.projectileVelocity, playerSelfScript.gameObject.transform.position, 1.1f))
+                    {
+                        Debug.Log("PREDICTED HIT");
                     }
                     //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
                     bullet.lastPosition = bullet.gameObject.transform.position;
@@ -65,9 +69,27 @@ namespace MattBot
             }
         }
 
-        private bool BulletLineCast(Transform bulletTransform, Vector3 end, float bulletRadius, out RaycastHit hitInfo, int layerMask, Color debugLineColour)
+        public static bool WillCurrentBulletPositionCollideWithCurrentPlayerPosition(Vector3 bulletPosition, float bulletRadius, float bulletVelocity, Vector3 playerPosition, float playerRadius)
         {
-            // TODO WRITE OWN COLLISSION DETECTION, LINECAST SEEMS INCONSISTENT, USE DISTANCE FROM BULLET WITH PADDING
+            if(Vector3.Distance(bulletPosition, playerPosition) - bulletRadius < playerRadius)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool WillBulletTrajectoryCollideWithPlayerTrajectory(Bullet bullet)
+        {
+            while (bullet.gameObject != null && bullet.gameObject.activeSelf && bullet.timeToLive > 0.1f)
+            {
+                // TODO LOOP THROUGH AND CHECK WillCurrentBulletPositionCollideWithCurrentPlayerPosition WITH EstimateProjectilePositionAfterTime 
+            }
+            return false;
+        }
+
+        private bool DEPRECATED_BulletLineCast(Transform bulletTransform, Vector3 end, float bulletRadius, out RaycastHit hitInfo, int layerMask, Color debugLineColour)
+        {
+            // TODO WRITE OWN COLLISSION DETECTION, LINECAST SEEMS INCONSISTENT, ALSO THIS WILL TRIGGER WITH COLLISION AGAINST ANY BOT LOL, USE DISTANCE FROM BULLET WITH PADDING
             bool leftEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * -bulletRadius, end + bulletTransform.right * -bulletRadius, out hitInfo, layerMask, debugLineColour);
             bool rightEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * bulletRadius, end + bulletTransform.right * bulletRadius, out hitInfo, layerMask, debugLineColour);
             return (leftEdge || rightEdge);
