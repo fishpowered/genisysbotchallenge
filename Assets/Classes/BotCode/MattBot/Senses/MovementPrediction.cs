@@ -14,7 +14,7 @@ namespace MattBot
             {
                 return currentTransform.position;
             }
-            Vector3 predictedLocation = currentTransform.forward * PrimaryWeaponProjectile.projectileVelocity * time;
+            Vector3 predictedLocation = (currentTransform.forward * PrimaryWeaponProjectile.projectileVelocity) * time;
 
             return currentTransform.position + predictedLocation;
         }

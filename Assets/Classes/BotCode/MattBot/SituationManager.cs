@@ -39,7 +39,7 @@ namespace MattBot
                 }
             }
             Bullet closestBullet = bulletList.GetClosestBulletToStrikingPlayerSelf();
-            if (closestBullet != null && closestBullet.distanceFromStrikingPlayer < 5f)
+            if (closestBullet != null && closestBullet.distanceFromStrikingPlayer < 6f)
             {
                 selfPlayerScript.movePlayer = BasePlayer.movementTypes.Left;
                 //selfPlayerScript.shootPrimaryWeapon = true;

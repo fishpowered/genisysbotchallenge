@@ -50,20 +50,15 @@ namespace MattBot
                     //hitInfo.
                     bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
                     bullet.proximityToPlayer = Vector3.Distance(bullet.gameObject.transform.position, playerSelfScript.gameObject.transform.position);
-                    if (DEPRECATED_BulletLineCast(bullet.gameObject.transform, bullet.predictedPosition, bullet.radius, out hitInfo, 1 << LayerMask.NameToLayer("Players"), Color.red))
+                   
+                    float timeTillHit = TimeBulletTrajectoryCollideWithPlayerTrajectory(bullet, playerSelfScript, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
+                    //Debug.Log(bullet.timeToLive);
+                    if (timeTillHit > -0.5f)
                     {
-                        bullet.distanceFromStrikingPlayer = hitInfo.distance;
+                        bullet.distanceFromStrikingPlayer = timeTillHit;
                     }
-                    else
-                    {
-                        bullet.distanceFromStrikingPlayer = null;
-                    }
-                    if(WillCurrentBulletPositionCollideWithCurrentPlayerPosition(bullet.gameObject.transform.position, bullet.radius, PrimaryWeaponProjectile.projectileVelocity, playerSelfScript.gameObject.transform.position, 1.1f))
-                    {
-                        Debug.Log("PREDICTED HIT");
-                    }
-                    //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
-                    bullet.lastPosition = bullet.gameObject.transform.position;
+                        //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
+                        bullet.lastPosition = bullet.gameObject.transform.position;
                     bullet.timeAlive += fixedDeltaTime;
                 }
             }
@@ -78,13 +73,27 @@ namespace MattBot
             return false;
         }
 
-        public static bool WillBulletTrajectoryCollideWithPlayerTrajectory(Bullet bullet)
+        public static float TimeBulletTrajectoryCollideWithPlayerTrajectory(Bullet bullet, MattBot playerSelfScript, float bulletVelocity)
         {
-            while (bullet.gameObject != null && bullet.gameObject.activeSelf && bullet.timeToLive > 0.1f)
+            
+            float timeAlive = 0f;
+            float timeStep = (Time.fixedDeltaTime * 10f);
+            float timeToLive = bullet.timeToLive;
+            while (bullet.gameObject != null && bullet.gameObject.activeSelf && timeAlive < timeToLive)
             {
-                // TODO LOOP THROUGH AND CHECK WillCurrentBulletPositionCollideWithCurrentPlayerPosition WITH EstimateProjectilePositionAfterTime 
+                timeAlive += timeStep;
+                timeToLive -= timeStep;
+                // TODO PREDICT PLAYERS MOVEMENT AS WELL BASED ON MOVEMENT DIRECTION WE WANT TO SIMULATE
+                Vector3 bulletTrajectoryStep = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, bulletVelocity, timeAlive);
+                Debug.DrawLine(bulletTrajectoryStep, bulletTrajectoryStep*0.98f, Color.red);
+                if (WillCurrentBulletPositionCollideWithCurrentPlayerPosition(bulletTrajectoryStep, bullet.radius, bulletVelocity, playerSelfScript.gameObject.transform.position, MattBot.playerRadius))
+                {
+                    return timeAlive * PrimaryWeaponProjectile.projectileVelocity;
+                }
+                
+                
             }
-            return false;
+            return -1f;
         }
 
         private bool DEPRECATED_BulletLineCast(Transform bulletTransform, Vector3 end, float bulletRadius, out RaycastHit hitInfo, int layerMask, Color debugLineColour)

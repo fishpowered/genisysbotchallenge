@@ -12,6 +12,7 @@ namespace MattBot
         protected EnemySense enemySense;
         protected BulletSense bulletSense;
         protected SituationManager situationManager;
+        public const float playerRadius = 1.1f;
 
         /// <summary>
         /// Called once after bot is spawned. This is for intialising your bot code.
