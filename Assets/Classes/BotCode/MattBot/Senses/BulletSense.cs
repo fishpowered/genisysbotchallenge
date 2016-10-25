@@ -77,12 +77,11 @@ namespace MattBot
         {
             
             float timeAlive = 0f;
-            float timeStep = (Time.fixedDeltaTime * 10f);
+            float timeStep = (Time.fixedDeltaTime * 4f);
             float timeToLive = bullet.timeToLive;
             while (bullet.gameObject != null && bullet.gameObject.activeSelf && timeAlive < timeToLive)
             {
                 timeAlive += timeStep;
-                timeToLive -= timeStep;
                 // TODO PREDICT PLAYERS MOVEMENT AS WELL BASED ON MOVEMENT DIRECTION WE WANT TO SIMULATE
                 Vector3 bulletTrajectoryStep = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, bulletVelocity, timeAlive);
                 Debug.DrawLine(bulletTrajectoryStep, bulletTrajectoryStep*0.98f, Color.red);
