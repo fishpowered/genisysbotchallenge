@@ -51,7 +51,7 @@ namespace MattBot
                     bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
                     bullet.proximityToPlayer = Vector3.Distance(bullet.gameObject.transform.position, playerSelfScript.gameObject.transform.position);
                    
-                    float timeTillHit = TimeBulletTrajectoryCollideWithPlayerTrajectory(bullet, playerSelfScript, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
+                    float timeTillHit = TimeItWillTakeForBulletToCollideWithPlayer(bullet, playerSelfScript.transform.position, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
                     //Debug.Log(bullet.timeToLive);
                     if (timeTillHit > -0.5f)
                     {
@@ -73,34 +73,27 @@ namespace MattBot
             return false;
         }
 
-        public static float TimeBulletTrajectoryCollideWithPlayerTrajectory(Bullet bullet, MattBot playerSelfScript, float bulletVelocity)
+        public static float TimeItWillTakeForBulletToCollideWithPlayer(Bullet bullet, Vector3 playerPosition, float bulletVelocity)
         {
-            
             float timeAlive = 0f;
-            float timeStep = (Time.fixedDeltaTime * 4f);
+            float timeStep = Sense.predictionStep;
             float timeToLive = bullet.timeToLive;
             while (bullet.gameObject != null && bullet.gameObject.activeSelf && timeAlive < timeToLive)
             {
                 timeAlive += timeStep;
                 // TODO PREDICT PLAYERS MOVEMENT AS WELL BASED ON MOVEMENT DIRECTION WE WANT TO SIMULATE
                 Vector3 bulletTrajectoryStep = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, bulletVelocity, timeAlive);
-                Debug.DrawLine(bulletTrajectoryStep, bulletTrajectoryStep*0.98f, Color.red);
-                if (WillCurrentBulletPositionCollideWithCurrentPlayerPosition(bulletTrajectoryStep, bullet.radius, bulletVelocity, playerSelfScript.gameObject.transform.position, MattBot.playerRadius))
+                if (WillCurrentBulletPositionCollideWithCurrentPlayerPosition(bulletTrajectoryStep, bullet.radius, bulletVelocity, playerPosition, MattBot.playerRadius))
                 {
+                    Debug.DrawLine(bulletTrajectoryStep, bulletTrajectoryStep * 0.98f, Color.red);
                     return timeAlive * PrimaryWeaponProjectile.projectileVelocity;
                 }
-                
-                
+                else
+                {
+                    Debug.DrawLine(bulletTrajectoryStep, bulletTrajectoryStep * 0.98f, Color.green);
+                }
             }
-            return -1f;
-        }
-
-        private bool DEPRECATED_BulletLineCast(Transform bulletTransform, Vector3 end, float bulletRadius, out RaycastHit hitInfo, int layerMask, Color debugLineColour)
-        {
-            // TODO WRITE OWN COLLISSION DETECTION, LINECAST SEEMS INCONSISTENT, ALSO THIS WILL TRIGGER WITH COLLISION AGAINST ANY BOT LOL, USE DISTANCE FROM BULLET WITH PADDING
-            bool leftEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * -bulletRadius, end + bulletTransform.right * -bulletRadius, out hitInfo, layerMask, debugLineColour);
-            bool rightEdge = Sense.Linecast(bulletTransform.position + bulletTransform.right * bulletRadius, end + bulletTransform.right * bulletRadius, out hitInfo, layerMask, debugLineColour);
-            return (leftEdge || rightEdge);
+            return -999f;
         }
     }
 }

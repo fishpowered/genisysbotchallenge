@@ -19,6 +19,37 @@ namespace MattBot
             return currentTransform.position + predictedLocation;
         }
 
+        /// <summary>
+        /// Requires movement direction to be known but will accurately predict position
+        /// </summary>
+        public static Vector3 GetProjectedPlayerPositionAfterTime(Transform playerTransform, BasePlayer.movementTypes movementDirection, float time)
+        {
+            Vector3 predictedMoveVector;
+            switch (movementDirection)
+            {
+                case BasePlayer.movementTypes.None:
+                    return playerTransform.position;
+                case BasePlayer.movementTypes.Right:
+                    predictedMoveVector = (playerTransform.right * BasePlayer.moveVelocity) * time;
+                    return playerTransform.position + predictedMoveVector;
+                case BasePlayer.movementTypes.Left:
+                    predictedMoveVector = (-playerTransform.right * BasePlayer.moveVelocity) * time;
+                    break;
+                case BasePlayer.movementTypes.Forward:
+                    predictedMoveVector = (playerTransform.forward * BasePlayer.moveVelocity) * time;
+                    break;
+                case BasePlayer.movementTypes.Back:
+                    predictedMoveVector = (-playerTransform.forward * BasePlayer.moveVelocity) * time;
+                    break;
+                default:
+                    return playerTransform.position;
+            }
+            return playerTransform.position + predictedMoveVector;
+        }
+
+        /// <summary>
+        /// Estimate position of bot after time based on trajectory from last known position to current position
+        /// </summary>
         public static Vector3 EstimatePositionAfterTime(Vector3 lastKnownPosition, Transform currentTransform, float movementVelocity, float time, BasePlayer.rotationTypes lastKnownRotation, BasePlayer.rotationTypes currentRotation, BasePlayer.movementTypes predictedMovementType)
         {
             if (lastKnownPosition == null)

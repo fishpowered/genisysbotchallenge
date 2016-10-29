@@ -30,7 +30,7 @@ namespace MattBot
                 if (enemyTarget.IsInRange())
                 {
                     // TODO should only shoot if predicted position is exposed
-                    //selfPlayerScript.shootPrimaryWeapon = true;
+                    selfPlayerScript.shootPrimaryWeapon = true;
                    
                 }
                 else
@@ -39,11 +39,15 @@ namespace MattBot
                 }
             }
             Bullet closestBullet = bulletList.GetClosestBulletToStrikingPlayerSelf();
-            if (closestBullet != null && closestBullet.distanceFromStrikingPlayer < 6f)
+            if (closestBullet != null && closestBullet.distanceFromStrikingPlayer < 4f)
             {
-                selfPlayerScript.movePlayer = BasePlayer.movementTypes.Left;
-                //selfPlayerScript.shootPrimaryWeapon = true;
-            }else
+                //Debug.Log("DODGING");
+                DodgeSense dodgeSense = new DodgeSense(selfPlayerScript, bulletList);
+                selfPlayerScript.movePlayer = dodgeSense.DetermineBestDirectionForPlayerSelfToMove();
+                //selfPlayerScript.movePlayer = BasePlayer.movementTypes.Left;
+             //   selfPlayerScript.shootPrimaryWeapon = true;
+            }
+            else
             {
                 selfPlayerScript.movePlayer = BasePlayer.movementTypes.None;
             }

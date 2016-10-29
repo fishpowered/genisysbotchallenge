@@ -8,6 +8,11 @@ namespace MattBot
 {
     class Sense
     {
+        /// <summary>
+        /// It's expensive to retest every physics cycle so test in larger time steps
+        /// </summary>
+        public static float predictionStep = 5f * Time.fixedDeltaTime;
+
         public static bool Linecast(Vector3 start, Vector3 end, out RaycastHit hitInfo, int layerMask, Color debugLineColour)
         {
             bool collisionResult = Physics.Linecast(start, end, out hitInfo, layerMask);
