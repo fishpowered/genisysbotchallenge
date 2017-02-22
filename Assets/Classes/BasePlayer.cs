@@ -260,6 +260,7 @@ abstract public class BasePlayer : MonoBehaviour {
                     health -= 20;
                     if(health <= 0)
                     {
+                        Debug.Log("DAMAGE TAKEN");
                         KillPlayer(attackerGameObject);
                     }
                 }

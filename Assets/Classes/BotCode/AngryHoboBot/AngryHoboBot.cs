@@ -18,7 +18,7 @@ namespace TestingBots
         /// </summary>
         protected override void InitPlayer()
         {
-            shootPrimaryWeapon = false;
+
         }
 
         /// <summary>

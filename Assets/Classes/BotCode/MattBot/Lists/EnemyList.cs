@@ -23,7 +23,6 @@ namespace MattBot
             GameObject[] enemyGameObjects = GameObject.FindGameObjectsWithTag("Player");
             foreach (GameObject enemyGameObject in enemyGameObjects)
             {
-                
                 if (enemyGameObject != playerSelf && enemyGameObject.activeSelf) {
                     Enemy enemy = new Enemy(enemyGameObject); 
                     this.Add(enemy);

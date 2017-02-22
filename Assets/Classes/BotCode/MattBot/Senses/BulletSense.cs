@@ -46,20 +46,22 @@ namespace MattBot
                     RaycastHit hitInfo = new RaycastHit();
 
                     bullet.timeToLive = (PrimaryWeaponProjectile.timeToLive - bullet.timeAlive); // * PrimaryWeaponProjectile.projectileVelocity * PrimaryWeaponProjectile.projectileVelocity; // projectileVelocity * Time.fixedDeltaTime;
-
-                    //hitInfo.
-                    bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
                     bullet.proximityToPlayer = Vector3.Distance(bullet.gameObject.transform.position, playerSelfScript.gameObject.transform.position);
-                   
-                    float timeTillHit = TimeItWillTakeForBulletToCollideWithPlayer(bullet, playerSelfScript.transform.position, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
-                    //Debug.Log(bullet.timeToLive);
-                    if (timeTillHit > -0.5f)
-                    {
-                        bullet.distanceFromStrikingPlayer = timeTillHit;
+                    if (bullet.NeedsTradjectoryChecking()) { 
+                        //hitInfo.
+                        bullet.predictedPosition = MovementPrediction.EstimateProjectilePositionAfterTime(bullet.lastPosition, bullet.gameObject.transform, PrimaryWeaponProjectile.projectileVelocity, bullet.timeToLive); // , BasePlayer.rotationTypes.None, BasePlayer.rotationTypes.None, BasePlayer.movementTypes.Forward
+                    
+                        float timeTillHit = TimeItWillTakeForBulletToCollideWithPlayer(bullet, playerSelfScript.transform.position, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
+                        //Debug.Log(bullet.timeToLive);
+                        if (timeTillHit > -0.5f)
+                        {
+                            bullet.distanceFromStrikingPlayer = timeTillHit;
+                        }
                     }
-                        //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
-                        bullet.lastPosition = bullet.gameObject.transform.position;
+                    //Debug.Log("hit " + hitInfo.distance + " proximity " + bullet.proximityToPlayer);
+                    bullet.lastPosition = bullet.gameObject.transform.position;
                     bullet.timeAlive += fixedDeltaTime;
+                    bullet.lastProximityToPlayer = bullet.proximityToPlayer;
                 }
             }
         }

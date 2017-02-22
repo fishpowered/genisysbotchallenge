@@ -23,7 +23,7 @@ namespace MattBot
             {
                 DodgeAttemptPrediction dodgeAttempt = new DodgeAttemptPrediction();
                 dodgeAttempt.movementType = movementType;
-                dodgeAttempt.maxDistancePlayerCanMove = 10f; // TODO use raycast to test how far player can move
+                dodgeAttempt.maxDistancePlayerCanMove = 5f; // TODO use raycast to test how far player can move
                 while (dodgeAttempt.durationTested < dodgeAttempt.maxDurationToTest && dodgeAttempt.hasFoundSafeSpot == false && dodgeAttempt.distancePlayerHasMoved < dodgeAttempt.maxDistancePlayerCanMove)
                 {
                     dodgeAttempt.durationTested += Sense.predictionStep;
@@ -32,7 +32,7 @@ namespace MattBot
                     Vector3 predictedPlayerPosition = MovementPrediction.GetProjectedPlayerPositionAfterTime(playerSelfScript.transform, movementType, dodgeAttempt.durationTested);
                     foreach (Bullet bullet in this.bulletList.Values)
                     {
-                        if (bullet.gameObject != null)
+                        if (bullet.gameObject != null ) // && bullet.NeedsTradjectoryChecking() <-- causes not to dodge at all?
                         {
                             float timeAtWhichBulletWillHitPlayerPosition = BulletSense.TimeItWillTakeForBulletToCollideWithPlayer(bullet, predictedPlayerPosition, PrimaryWeaponProjectile.projectileVelocity * Time.fixedDeltaTime);
                             if (timeAtWhichBulletWillHitPlayerPosition < -1f)

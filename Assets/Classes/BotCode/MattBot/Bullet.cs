@@ -15,6 +15,7 @@ namespace MattBot
         // Information accumulated from senses...
         public Nullable<float> distanceFromStrikingPlayer;
         public float proximityToPlayer;
+        public float lastProximityToPlayer;
         //public float distanceFromPlayerGun;
         public float timeToLive;
         public float timeAlive = 0f;
@@ -42,6 +43,11 @@ namespace MattBot
         public bool IsAlive()
         {
             return (gameObject.activeSelf);
+        }
+
+        public bool NeedsTradjectoryChecking()
+        {
+            return (this.lastProximityToPlayer > this.proximityToPlayer);
         }
     }
 }
