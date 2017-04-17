@@ -1,6 +1,6 @@
 ## Synopsis
 
-This is a simple test bed for developing A.I that can be pitted against one another.
+This is a simple test bed for developing A.I that can be pitted against one another. A demo video can be viewed here https://youtu.be/2OI4H56TNjw
 
 ## Installation
 
@@ -16,4 +16,4 @@ Matt Pike, Terminator Judgement Day music playing over and over in my head.
 
 ## License
 
-No. Don't sue me.
+Nope.
